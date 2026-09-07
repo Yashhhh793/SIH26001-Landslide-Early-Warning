@@ -100,7 +100,7 @@ def get_terrain_features(lat, lon):
 
     for point_lat, point_lon in points:
 
-                url = (
+        url = (
             "https://api.open-meteo.com/v1/elevation"
             f"?latitude={point_lat}"
             f"&longitude={point_lon}"
@@ -140,8 +140,6 @@ def get_terrain_features(lat, lon):
     )
 
     return round(float(slope), 2), round(center, 2)
-
-
 # =======================================================
 # 🚨 RISK CLASSIFICATION
 # =======================================================
