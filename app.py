@@ -303,36 +303,48 @@ def gradio_prediction(lat, lon):
 # =======================================================
 # 🖥️ GRADIO UI
 # =======================================================
+# ============================================================
+# 🗺️ GRADIO UI - FINAL VERSION
+# ============================================================
 
 with gr.Blocks(
     title="Landslide Early Warning System"
 ) as demo:
 
-    gr.Markdown(
-        """
-        # 🚨 Landslide Early Warning System
+    gr.Markdown("""
+# 🚨 Landslide Early Warning System
 
-        ### AI-Based Localized Landslide Risk Assessment
+### AI-Based Localized Landslide Risk Assessment
 
-        Enter latitude and longitude to analyze
-        the latest environmental and terrain conditions.
-        """
-    )
+Select a location on the map or enter latitude and longitude manually.
+The system fetches live environmental and terrain data and calculates
+the landslide risk.
+""")
+
+    # ========================================================
+    # LOCATION SECTION
+    # ========================================================
+
+    gr.Markdown("## 📍 Select Location")
 
     with gr.Row():
 
-        with gr.Column():
-
-            gr.Markdown("### 📍 Location")
+        with gr.Column(scale=1):
 
             latitude = gr.Number(
                 label="Latitude",
-                value=27.3389
+                value=27.3389,
+                elem_id="latitude_input"
             )
 
             longitude = gr.Number(
                 label="Longitude",
-                value=88.6065
+                value=88.6065,
+                elem_id="longitude_input"
+            )
+
+            gr.Markdown(
+                "💡 **Tip:** Click anywhere on the map to select a location."
             )
 
             predict_button = gr.Button(
@@ -340,26 +352,178 @@ with gr.Blocks(
                 variant="primary"
             )
 
-        with gr.Column():
+        with gr.Column(scale=2):
 
-            gr.Markdown("### 🚨 AI Risk Assessment")
+            gr.HTML("""
+<style>
+#landslide-map {
+    width: 100%;
+    height: 450px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #888;
+}
+</style>
 
-            risk_level = gr.Textbox(
-                label="Risk Level"
+<div id="landslide-map"></div>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script>
+
+setTimeout(function() {
+
+    // Create map
+    const map = L.map("landslide-map").setView(
+        [27.3389, 88.6065],
+        7
+    );
+
+    // OpenStreetMap layer
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            attribution:
+                "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(map);
+
+    // Initial marker
+    let marker = L.marker(
+        [27.3389, 88.6065]
+    ).addTo(map);
+
+    marker.bindPopup(
+        "<b>Selected Location</b><br>" +
+        "Sikkim"
+    ).openPopup();
+
+
+    // Function to update Gradio number input
+    function updateInput(id, value) {
+
+        const container =
+            document.querySelector("#" + id);
+
+        if (!container) {
+            return;
+        }
+
+        const input =
+            container.querySelector("input");
+
+        if (!input) {
+            return;
+        }
+
+        const setter =
+            Object.getOwnPropertyDescriptor(
+                HTMLInputElement.prototype,
+                "value"
+            ).set;
+
+        setter.call(
+            input,
+            String(value)
+        );
+
+        input.dispatchEvent(
+            new Event(
+                "input",
+                {
+                    bubbles: true
+                }
             )
+        );
 
-            risk_score = gr.Textbox(
-                label="AI Risk Score"
+        input.dispatchEvent(
+            new Event(
+                "change",
+                {
+                    bubbles: true
+                }
             )
+        );
+    }
 
-            warning = gr.Textbox(
-                label="System Warning",
-                lines=2
-            )
 
-    gr.Markdown(
-        "### 🌧️ Environmental Conditions"
+    // Map click
+    map.on(
+        "click",
+        function(e) {
+
+            const lat =
+                e.latlng.lat.toFixed(6);
+
+            const lon =
+                e.latlng.lng.toFixed(6);
+
+            // Move marker
+            marker.setLatLng(
+                [lat, lon]
+            );
+
+            // Update latitude
+            updateInput(
+                "latitude_input",
+                lat
+            );
+
+            // Update longitude
+            updateInput(
+                "longitude_input",
+                lon
+            );
+
+            // Popup
+            marker.bindPopup(
+                "<b>Selected Location</b><br>" +
+                "Latitude: " + lat +
+                "<br>Longitude: " + lon
+            ).openPopup();
+        }
+    );
+
+}, 1500);
+
+</script>
+""")
+
+
+    # ========================================================
+    # RISK ASSESSMENT
+    # ========================================================
+
+    gr.Markdown("## 🚨 Landslide Risk Assessment")
+
+    with gr.Row():
+
+        risk_level = gr.Textbox(
+            label="Risk Level"
+        )
+
+        risk_score = gr.Textbox(
+            label="Landslide Risk Score"
+        )
+
+    warning = gr.Textbox(
+        label="System Warning",
+        lines=2
     )
+
+
+    # ========================================================
+    # ENVIRONMENTAL CONDITIONS
+    # ========================================================
+
+    gr.Markdown("## 🌧️ Environmental Conditions")
 
     with gr.Row():
 
@@ -375,9 +539,12 @@ with gr.Blocks(
             label="Soil Moisture (m³/m³)"
         )
 
-    gr.Markdown(
-        "### ⛰️ Terrain Conditions"
-    )
+
+    # ========================================================
+    # TERRAIN CONDITIONS
+    # ========================================================
+
+    gr.Markdown("## ⛰️ Terrain Conditions")
 
     with gr.Row():
 
@@ -389,9 +556,12 @@ with gr.Blocks(
             label="Elevation (m)"
         )
 
-    gr.Markdown(
-        "### 🌡️ Current Weather"
-    )
+
+    # ========================================================
+    # CURRENT WEATHER
+    # ========================================================
+
+    gr.Markdown("## 🌡️ Current Weather")
 
     with gr.Row():
 
@@ -402,6 +572,11 @@ with gr.Blocks(
         humidity = gr.Number(
             label="Humidity (%)"
         )
+
+
+    # ========================================================
+    # EXISTING PREDICTION FUNCTION
+    # ========================================================
 
     predict_button.click(
         fn=gradio_prediction,
@@ -426,9 +601,9 @@ with gr.Blocks(
     )
 
 
-# =======================================================
+# ============================================================
 # 🌐 SERVER LAUNCH
-# =======================================================
+# ============================================================
 
 demo.launch(
     server_name="0.0.0.0",
