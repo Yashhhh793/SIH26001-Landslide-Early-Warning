@@ -300,11 +300,9 @@ def gradio_prediction(lat, lon):
         )
 
 
-# =======================================================
-# 🖥️ GRADIO UI
-# =======================================================
+# 
 # ============================================================
-# 🗺️ GRADIO UI - FINAL VERSION
+# 🗺️ FINAL GRADIO UI WITH INTERACTIVE MAP
 # ============================================================
 
 with gr.Blocks(
@@ -318,16 +316,20 @@ with gr.Blocks(
 
 Select a location on the map or enter latitude and longitude manually.
 The system fetches live environmental and terrain data and calculates
-the landslide risk.
+the localized landslide risk.
 """)
 
     # ========================================================
-    # LOCATION SECTION
+    # LOCATION
     # ========================================================
 
     gr.Markdown("## 📍 Select Location")
 
     with gr.Row():
+
+        # ----------------------------------------------------
+        # LATITUDE / LONGITUDE
+        # ----------------------------------------------------
 
         with gr.Column(scale=1):
 
@@ -344,7 +346,7 @@ the landslide risk.
             )
 
             gr.Markdown(
-                "💡 **Tip:** Click anywhere on the map to select a location."
+                "💡 Click anywhere on the map to select a location."
             )
 
             predict_button = gr.Button(
@@ -352,153 +354,205 @@ the landslide risk.
                 variant="primary"
             )
 
+        # ----------------------------------------------------
+        # INTERACTIVE MAP
+        # ----------------------------------------------------
+
         with gr.Column(scale=2):
 
-            gr.HTML("""
-<style>
-#landslide-map {
-    width: 100%;
-    height: 450px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid #888;
-}
-</style>
+            map_html = gr.HTML(
+                html_template="""
+                <div id="landslide-map"
+                     style="
+                        width:100%;
+                        height:450px;
+                        border-radius:12px;
+                        overflow:hidden;
+                        border:2px solid #777;
+                     ">
+                </div>
+                """,
 
-<div id="landslide-map"></div>
+                head="""
+                <link
+                    rel="stylesheet"
+                    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+                />
 
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+                <script
+                    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+                </script>
+                """,
 
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
+                js_on_load="""
 
-<script>
+                const mapContainer =
+                    element.querySelector("#landslide-map");
 
-setTimeout(function() {
-
-    // Create map
-    const map = L.map("landslide-map").setView(
-        [27.3389, 88.6065],
-        7
-    );
-
-    // OpenStreetMap layer
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            attribution:
-                "&copy; OpenStreetMap contributors"
-        }
-    ).addTo(map);
-
-    // Initial marker
-    let marker = L.marker(
-        [27.3389, 88.6065]
-    ).addTo(map);
-
-    marker.bindPopup(
-        "<b>Selected Location</b><br>" +
-        "Sikkim"
-    ).openPopup();
-
-
-    // Function to update Gradio number input
-    function updateInput(id, value) {
-
-        const container =
-            document.querySelector("#" + id);
-
-        if (!container) {
-            return;
-        }
-
-        const input =
-            container.querySelector("input");
-
-        if (!input) {
-            return;
-        }
-
-        const setter =
-            Object.getOwnPropertyDescriptor(
-                HTMLInputElement.prototype,
-                "value"
-            ).set;
-
-        setter.call(
-            input,
-            String(value)
-        );
-
-        input.dispatchEvent(
-            new Event(
-                "input",
-                {
-                    bubbles: true
+                if (!mapContainer) {
+                    console.error("Map container not found");
+                    return;
                 }
-            )
-        );
 
-        input.dispatchEvent(
-            new Event(
-                "change",
-                {
-                    bubbles: true
+                // Create map
+                const map = L.map(mapContainer).setView(
+                    [27.3389, 88.6065],
+                    7
+                );
+
+                // OpenStreetMap
+                L.tileLayer(
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    {
+                        attribution:
+                            "&copy; OpenStreetMap contributors"
+                    }
+                ).addTo(map);
+
+
+                // Initial marker
+                let marker = L.marker(
+                    [27.3389, 88.6065]
+                ).addTo(map);
+
+                marker.bindPopup(
+                    "<b>Selected Location</b><br>" +
+                    "Latitude: 27.3389<br>" +
+                    "Longitude: 88.6065"
+                );
+
+
+                // ------------------------------------------------
+                // UPDATE GRADIO NUMBER INPUT
+                // ------------------------------------------------
+
+                function updateGradioInput(
+                    componentId,
+                    value
+                ) {
+
+                    const component =
+                        document.querySelector(
+                            "#" + componentId
+                        );
+
+                    if (!component) {
+                        console.log(
+                            "Component not found:",
+                            componentId
+                        );
+                        return;
+                    }
+
+                    const input =
+                        component.querySelector("input");
+
+                    if (!input) {
+                        console.log(
+                            "Input not found:",
+                            componentId
+                        );
+                        return;
+                    }
+
+
+                    const nativeSetter =
+                        Object.getOwnPropertyDescriptor(
+                            HTMLInputElement.prototype,
+                            "value"
+                        ).set;
+
+
+                    nativeSetter.call(
+                        input,
+                        String(value)
+                    );
+
+
+                    input.dispatchEvent(
+                        new Event(
+                            "input",
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+
+                    input.dispatchEvent(
+                        new Event(
+                            "change",
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
                 }
+
+
+                // ------------------------------------------------
+                // MAP CLICK
+                // ------------------------------------------------
+
+                map.on(
+                    "click",
+                    function(event) {
+
+                        const lat =
+                            event.latlng.lat.toFixed(6);
+
+                        const lon =
+                            event.latlng.lng.toFixed(6);
+
+
+                        // Move marker
+                        marker.setLatLng(
+                            [lat, lon]
+                        );
+
+
+                        // Update latitude
+                        updateGradioInput(
+                            "latitude_input",
+                            lat
+                        );
+
+
+                        // Update longitude
+                        updateGradioInput(
+                            "longitude_input",
+                            lon
+                        );
+
+
+                        // Popup
+                        marker.bindPopup(
+                            "<b>📍 Selected Location</b><br><br>" +
+                            "Latitude: " +
+                            lat +
+                            "<br>" +
+                            "Longitude: " +
+                            lon
+                        ).openPopup();
+
+                    }
+                );
+
+
+                // Fix map size after rendering
+                setTimeout(
+                    function() {
+                        map.invalidateSize();
+                    },
+                    1000
+                );
+
+                """
             )
-        );
-    }
-
-
-    // Map click
-    map.on(
-        "click",
-        function(e) {
-
-            const lat =
-                e.latlng.lat.toFixed(6);
-
-            const lon =
-                e.latlng.lng.toFixed(6);
-
-            // Move marker
-            marker.setLatLng(
-                [lat, lon]
-            );
-
-            // Update latitude
-            updateInput(
-                "latitude_input",
-                lat
-            );
-
-            // Update longitude
-            updateInput(
-                "longitude_input",
-                lon
-            );
-
-            // Popup
-            marker.bindPopup(
-                "<b>Selected Location</b><br>" +
-                "Latitude: " + lat +
-                "<br>Longitude: " + lon
-            ).openPopup();
-        }
-    );
-
-}, 1500);
-
-</script>
-""")
 
 
     # ========================================================
-    # RISK ASSESSMENT
+    # LANDSLIDE RISK ASSESSMENT
     # ========================================================
 
     gr.Markdown("## 🚨 Landslide Risk Assessment")
@@ -512,6 +566,7 @@ setTimeout(function() {
         risk_score = gr.Textbox(
             label="Landslide Risk Score"
         )
+
 
     warning = gr.Textbox(
         label="System Warning",
@@ -611,3 +666,5 @@ demo.launch(
         os.environ.get("PORT", 10000)
     )
 )
+
+    
