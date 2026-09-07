@@ -100,11 +100,10 @@ def get_terrain_features(lat, lon):
 
     for point_lat, point_lon in points:
 
-        url = (
-    "https://api.open-meteo.com/v1/elevation"
-    f"?latitude={point_lat}"
-    f"&longitude={point_lon}"
-          )
+                url = (
+            "https://api.open-meteo.com/v1/elevation"
+            f"?latitude={point_lat}"
+            f"&longitude={point_lon}"
         )
 
         response = requests.get(
@@ -117,7 +116,7 @@ def get_terrain_features(lat, lon):
         data = response.json()
 
         elevations.append(
-            float(data["elevation"])
+            float(data["elevation"][0])
         )
 
     center = elevations[0]
