@@ -47,7 +47,8 @@ def get_live_weather(lat, lon):
     )
 
     response = requests.get(url, timeout=API_TIMEOUT)
-    response.raise_for_status()
+    if response.status_code != 200:
+    raise Exception(f"Open-Meteo API Error {response.status_code}: {response.text}")
 
     data = response.json()
 
