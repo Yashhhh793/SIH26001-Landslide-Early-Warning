@@ -846,131 +846,90 @@ with gr.Blocks(
                     }
                 );
 
+             // ------------------------------------------------
+                 // SYNC MAP WITH GRADIO COORDINATES
+            // ------------------------------------------------
 
-                // ------------------------------------------------
-                // WATCH COORDINATES
-                // State search changes Python inputs.
-                // This keeps map synchronized.
-                // ------------------------------------------------
+let lastLat = null;
+let lastLon = null;
 
-                let lastLat = 27.3389;
-                let lastLon = 88.6065;
+function syncMapWithInputs() {
 
+    const latInput =
+        document.querySelector(
+            "#latitude_input input"
+        );
 
-                setInterval(
-                    function() {
+    const lonInput =
+        document.querySelector(
+            "#longitude_input input"
+        );
 
-                        const latInput =
-                            document.querySelector(
-                                "#latitude_input input"
-                            );
+    if (!latInput || !lonInput) {
+        return;
+    }
 
-                        const lonInput =
-                            document.querySelector(
-                                "#longitude_input input"
-                            );
+    const lat = parseFloat(latInput.value);
+    const lon = parseFloat(lonInput.value);
 
+    if (
+        Number.isNaN(lat) ||
+        Number.isNaN(lon)
+    ) {
+        return;
+    }
 
-                        if (!latInput || !lonInput)
-                            return;
+    // Only move map when coordinates actually change
+    if (
+        lastLat === lat &&
+        lastLon === lon
+    ) {
+        return;
+    }
 
+    lastLat = lat;
+    lastLon = lon;
 
-                        const lat =
-                            parseFloat(latInput.value);
+    // Move marker
+    marker.setLatLng([
+        lat,
+        lon
+    ]);
 
-                        const lon =
-                            parseFloat(lonInput.value);
+    // Move map to selected location
+    map.flyTo(
+        [lat, lon],
+        9,
+        {
+            duration: 1.2
+        }
+    );
 
+    // Update popup
+    marker.bindPopup(
+        "<b>📍 Selected Location</b><br><br>" +
+        "Latitude: " +
+        lat.toFixed(6) +
+        "<br>" +
+        "Longitude: " +
+        lon.toFixed(6)
+    );
 
-                        if (
-                            Number.isNaN(lat) ||
-                            Number.isNaN(lon)
-                        )
-                            return;
-
-
-                        if (
-                            lat !== lastLat ||
-                            lon !== lastLon
-                        ) {
-
-                            lastLat = lat;
-                            lastLon = lon;
-
-
-                            marker.setLatLng(
-                                [lat, lon]
-                            );
-
-
-                            map.setView(
-                                [lat, lon],
-                                9
-                            );
-
-
-                            marker.bindPopup(
-                                "<b>📍 Selected Location</b><br><br>" +
-                                "Latitude: " +
-                                lat.toFixed(6) +
-                                "<br>" +
-                                "Longitude: " +
-                                lon.toFixed(6)
-                            );
-
-                        }
-
-                    },
-                    700
-                );
+}
 
 
-                // ------------------------------------------------
-                // DAY / NIGHT MODE
-                // ------------------------------------------------
-
-                function updateTheme() {
-
-                    const hour =
-                        new Date().getHours();
+// Check coordinates regularly
+setInterval(
+    syncMapWithInputs,
+    300
+);
 
 
-                    if (
-                        hour >= 6 &&
-                        hour < 18
-                    ) {
-
-                        document.body.classList.remove(
-                            "night-mode"
-                        );
-
-                        document.body.classList.add(
-                            "day-mode"
-                        );
-
-                    } else {
-
-                        document.body.classList.remove(
-                            "day-mode"
-                        );
-
-                        document.body.classList.add(
-                            "night-mode"
-                        );
-
-                    }
-
-                }
-
-
-                updateTheme();
-
-
-                setInterval(
-                    updateTheme,
-                    60000
-                );
-
+// Run once after page loads
+setTimeout(
+    syncMapWithInputs,
+    1000
+);   
 
                 // ------------------------------------------------
                 // MAP SIZE FIX
