@@ -464,35 +464,113 @@ def select_state(state):
 
 CUSTOM_CSS = """
 
-/* ------------------------------
-   MAIN BACKGROUND
---------------------------------*/
+/* ============================================================
+   🌗 AUTOMATIC DAY / NIGHT THEME
+   ============================================================ */
 
-body {
+
+/* ============================================================
+   ☀️ DAY MODE
+   6 AM - 6 PM
+   ============================================================ */
+
+body.day-mode {
+    background: #eef7f5 !important;
     transition: background 0.8s ease;
 }
 
-.gradio-container {
-    max-width: 1450px !important;
+body.day-mode .gradio-container {
+    background: #eef7f5 !important;
+    color: #173b36 !important;
 }
 
 
-/* ------------------------------
-   HEADER
---------------------------------*/
+/* Day mode cards */
+
+body.day-mode .glass-card,
+body.day-mode .risk-card {
+    background: rgba(255,255,255,0.88) !important;
+    border: 1px solid rgba(0,121,107,0.22);
+    box-shadow: 0 8px 25px rgba(0,80,70,0.10);
+}
+
+
+/* Day mode inputs */
+
+body.day-mode input,
+body.day-mode textarea,
+body.day-mode button {
+    border-color: rgba(0,121,107,0.25) !important;
+}
+
+
+/* ============================================================
+   🌌 NIGHT MODE
+   6 PM - 6 AM
+   ============================================================ */
+
+body.night-mode {
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(0,150,136,0.12),
+            transparent 35%
+        ),
+        #071413 !important;
+
+    transition: background 0.8s ease;
+}
+
+body.night-mode .gradio-container {
+    background: transparent !important;
+    color: #e8fffb !important;
+}
+
+
+/* Night cards */
+
+body.night-mode .glass-card,
+body.night-mode .risk-card {
+    background: rgba(11,35,33,0.82) !important;
+
+    border: 1px solid rgba(0,188,174,0.25);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.35),
+        0 0 20px rgba(0,150,136,0.06);
+}
+
+
+/* Night inputs */
+
+body.night-mode input,
+body.night-mode textarea {
+    background: #102321 !important;
+    color: #e8fffb !important;
+    border-color: rgba(0,188,174,0.25) !important;
+}
+
+
+/* ============================================================
+   🚨 HEADER
+   ============================================================ */
 
 .dashboard-header {
-    padding: 28px;
-    border-radius: 22px;
-    margin-bottom: 20px;
+    padding: 30px;
+    border-radius: 24px;
+    margin-bottom: 25px;
+
     background:
         linear-gradient(
             135deg,
-            rgba(0, 137, 123, 0.95),
-            rgba(0, 105, 92, 0.90)
+            #008f83,
+            #00695c
         );
+
     color: white;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+
+    box-shadow:
+        0 15px 35px rgba(0,80,70,0.22);
 }
 
 .dashboard-header h1 {
@@ -502,84 +580,119 @@ body {
 
 .dashboard-header p {
     font-size: 16px;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 
-/* ------------------------------
-   SECTION HEADINGS
---------------------------------*/
+/* ============================================================
+   🌌 NIGHT HEADER
+   ============================================================ */
+
+body.night-mode .dashboard-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #063f3b,
+            #071f1e,
+            #052b29
+        );
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.45),
+        0 0 30px rgba(0,188,174,0.08);
+}
+
+
+/* ============================================================
+   📍 SECTION HEADINGS
+   ============================================================ */
 
 .section-title {
     font-size: 22px;
     font-weight: 700;
-    margin-top: 22px;
-    margin-bottom: 10px;
+
+    margin-top: 24px;
+    margin-bottom: 12px;
 }
 
 
-/* ------------------------------
-   GLASS CARDS
---------------------------------*/
-
-.glass-card {
-    border-radius: 18px;
-    padding: 18px;
-    border: 1px solid rgba(0, 137, 123, 0.30);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.10);
-}
-
-
-/* ------------------------------
-   RISK CARD
---------------------------------*/
-
-.risk-card {
-    border-radius: 20px;
-    padding: 22px;
-    border: 2px solid rgba(0, 137, 123, 0.35);
-    text-align: center;
-}
-
-
-/* ------------------------------
-   MAP
---------------------------------*/
+/* ============================================================
+   🗺️ MAP
+   ============================================================ */
 
 #landslide-map {
+
     height: 500px !important;
     width: 100% !important;
+
     border-radius: 20px;
     overflow: hidden;
-    border: 2px solid rgba(0, 137, 123, 0.45);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+
+    border: 2px solid rgba(0,137,123,0.40);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,0.18);
 }
 
 
-/* ------------------------------
-   BUTTON
---------------------------------*/
+/* ============================================================
+   🌌 NIGHT MAP BORDER
+   ============================================================ */
+
+body.night-mode #landslide-map {
+
+    border-color:
+        rgba(0,188,174,0.45);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.45),
+        0 0 20px rgba(0,188,174,0.08);
+}
+
+
+/* ============================================================
+   🔍 ANALYZE BUTTON
+   ============================================================ */
 
 .analyze-button {
-    border-radius: 12px !important;
+
+    border-radius: 13px !important;
+
     font-weight: 700 !important;
+
+    min-height: 48px !important;
 }
 
 
-/* ------------------------------
-   STATUS
---------------------------------*/
+/* ============================================================
+   🌊 NIGHT BUTTON
+   ============================================================ */
 
-.status-pill {
-    display: inline-block;
-    padding: 7px 14px;
-    border-radius: 20px;
-    font-weight: 700;
-    background: rgba(0, 137, 123, 0.12);
+body.night-mode .analyze-button {
+
+    box-shadow:
+        0 0 15px rgba(0,188,174,0.12);
+}
+
+
+/* ============================================================
+   📱 RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 800px) {
+
+    .dashboard-header h1 {
+        font-size: 27px;
+    }
+
+    #landslide-map {
+        height: 400px !important;
+    }
+
 }
 
 """
-
 
 # ============================================================
 # 🚨 DASHBOARD
