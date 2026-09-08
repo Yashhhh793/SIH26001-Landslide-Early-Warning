@@ -1399,6 +1399,83 @@ body.day-mode .dashboard-footer {
     }
 
 }
+/* ==========================================================
+   🌌 NORTHERN LIGHTS / AURORA BACKGROUND
+   ========================================================== */
+
+body.night-mode::before {
+    content: "";
+    position: fixed;
+    top: -25%;
+    left: -15%;
+    width: 130%;
+    height: 70%;
+
+    background:
+        radial-gradient(
+            ellipse at 20% 60%,
+            rgba(0,255,190,0.18),
+            transparent 45%
+        ),
+        radial-gradient(
+            ellipse at 50% 40%,
+            rgba(0,220,180,0.14),
+            transparent 48%
+        ),
+        radial-gradient(
+            ellipse at 80% 60%,
+            rgba(0,190,220,0.16),
+            transparent 45%
+        );
+
+    filter: blur(35px);
+
+    transform: rotate(-5deg);
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* Aurora second glow */
+
+body.night-mode::after {
+    content: "";
+    position: fixed;
+
+    top: 0;
+    left: -10%;
+
+    width: 120%;
+    height: 55%;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 20%,
+            rgba(0,255,190,0.08) 35%,
+            rgba(0,220,190,0.14) 48%,
+            rgba(0,180,220,0.08) 62%,
+            transparent 78%
+        );
+
+    filter: blur(30px);
+
+    transform: skewY(-4deg);
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* Keep dashboard above aurora */
+
+body.night-mode .gradio-container {
+    position: relative;
+    z-index: 1;
+}
 """
 
 # ============================================================
