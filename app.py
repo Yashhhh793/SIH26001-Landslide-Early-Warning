@@ -744,18 +744,6 @@ body.day-mode .risk-card textarea {
 
 /* ---------- COMMON METRIC CARDS ---------- */
 
-body.day-mode .gradio-container .form,
-body.day-mode .gradio-container .block,
-body.night-mode .gradio-container .form,
-body.night-mode .gradio-container .block {
-    border-radius: 18px !important;
-    transition:
-        background 0.5s ease,
-        border-color 0.5s ease,
-        box-shadow 0.5s ease;
-}
-
-
 /* ==========================================================
    🌧️ ENVIRONMENTAL / TERRAIN / WEATHER
    ========================================================== */
@@ -977,6 +965,223 @@ body.day-mode {
         border-color 0.5s ease,
         box-shadow 0.5s ease,
         transform 0.2s ease;
+}
+/* ==========================================================
+   🌌 PREMIUM METRIC CARDS
+   ========================================================== */
+
+.metric-card {
+    border-radius: 20px !important;
+    padding: 4px !important;
+    min-height: 115px !important;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease !important;
+}
+
+
+/* ☀️ DAY */
+
+body.day-mode .metric-card {
+    background: rgba(255,255,255,0.82) !important;
+
+    border: 1px solid rgba(13,148,136,0.22) !important;
+
+    box-shadow:
+        0 8px 25px rgba(13,148,136,0.10) !important;
+}
+
+
+/* 🌙 NIGHT */
+
+body.night-mode .metric-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(9,43,40,0.92),
+            rgba(5,28,27,0.88)
+        ) !important;
+
+    border: 1px solid rgba(20,184,166,0.30) !important;
+
+    box-shadow:
+        0 8px 28px rgba(0,0,0,0.38),
+        0 0 22px rgba(20,184,166,0.07) !important;
+}
+
+
+/* Hover */
+
+.metric-card:hover {
+    transform: translateY(-4px);
+}
+
+body.night-mode .metric-card:hover {
+    border-color: rgba(45,212,191,0.55) !important;
+
+    box-shadow:
+        0 12px 32px rgba(0,0,0,0.42),
+        0 0 28px rgba(20,184,166,0.14) !important;
+}
+
+
+/* Metric values */
+
+.metric-card input {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+}
+
+
+/* Night metric values */
+
+body.night-mode .metric-card input {
+    color: #8fffe8 !important;
+    background: rgba(3,25,23,0.65) !important;
+    border-color: rgba(20,184,166,0.18) !important;
+}
+
+
+/* Day metric values */
+
+body.day-mode .metric-card input {
+    color: #075e57 !important;
+    background: rgba(255,255,255,0.72) !important;
+}
+
+
+/* Metric labels */
+
+.metric-card label {
+    font-weight: 700 !important;
+}
+
+
+/* ==========================================================
+   🚨 PREMIUM RISK PANELS
+   ========================================================== */
+
+.risk-panel {
+    border-radius: 22px !important;
+    padding: 5px !important;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease !important;
+}
+
+
+/* Day risk */
+
+body.day-mode .risk-panel {
+    background: rgba(255,255,255,0.86) !important;
+
+    border: 1px solid rgba(13,148,136,0.28) !important;
+
+    box-shadow:
+        0 10px 30px rgba(13,148,136,0.12) !important;
+}
+
+
+/* Night risk */
+
+body.night-mode .risk-panel {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(5,48,44,0.95),
+            rgba(3,27,26,0.92)
+        ) !important;
+
+    border: 1px solid rgba(45,212,191,0.32) !important;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.42),
+        0 0 30px rgba(20,184,166,0.10) !important;
+}
+
+
+/* Risk value */
+
+.risk-value input {
+    font-size: 25px !important;
+    font-weight: 900 !important;
+    min-height: 62px !important;
+    text-align: center !important;
+}
+
+
+body.night-mode .risk-value input {
+    color: #8fffe8 !important;
+    background: rgba(0,22,20,0.82) !important;
+}
+
+
+body.day-mode .risk-value input {
+    color: #075e57 !important;
+    background: rgba(255,255,255,0.85) !important;
+}
+
+
+/* ==========================================================
+   ⚠️ WARNING PANEL
+   ========================================================== */
+
+.warning-panel {
+    margin-top: 14px !important;
+    border-radius: 18px !important;
+
+    border: 1px solid rgba(245,158,11,0.30) !important;
+}
+
+
+body.night-mode .warning-panel {
+    background: rgba(48,34,8,0.55) !important;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.28),
+        0 0 18px rgba(245,158,11,0.05) !important;
+}
+
+
+body.day-mode .warning-panel {
+    background: rgba(255,251,235,0.90) !important;
+}
+
+
+/* ==========================================================
+   📊 SECTION TITLES
+   ========================================================== */
+
+.section-title {
+    margin-top: 30px !important;
+    margin-bottom: 15px !important;
+
+    font-size: 23px !important;
+    font-weight: 800 !important;
+}
+
+
+/* ==========================================================
+   📱 MOBILE
+   ========================================================== */
+
+@media (max-width: 800px) {
+
+    .metric-card {
+        min-height: 105px !important;
+    }
+
+    .metric-card input {
+        font-size: 19px !important;
+    }
+
+    .risk-value input {
+        font-size: 21px !important;
+    }
 }
 """
 
@@ -1417,7 +1622,7 @@ setTimeout(
             )
 
 
-    # ========================================================
+        # ========================================================
     # 🚨 RISK ASSESSMENT
     # ========================================================
 
@@ -1428,24 +1633,25 @@ setTimeout(
 
     with gr.Row():
 
-        with gr.Column():
-
+        with gr.Column(elem_classes="risk-panel"):
             risk_level = gr.Textbox(
-                label="Risk Level",
-                elem_classes="risk-card"
+                label="🚨 Risk Level",
+                elem_classes="risk-value",
+                interactive=False
             )
 
-        with gr.Column():
-
+        with gr.Column(elem_classes="risk-panel"):
             risk_score = gr.Textbox(
-                label="AI Risk Score",
-                elem_classes="risk-card"
+                label="🤖 AI Risk Score",
+                elem_classes="risk-value",
+                interactive=False
             )
-
 
     warning = gr.Textbox(
         label="⚠️ System Warning",
-        lines=2
+        lines=2,
+        interactive=False,
+        elem_classes="warning-panel"
     )
 
 
@@ -1460,21 +1666,27 @@ setTimeout(
 
     with gr.Row():
 
-        rainfall_3day = gr.Number(
-            label="3-Day Rainfall (mm)"
-        )
+        with gr.Column(elem_classes="metric-card"):
+            rainfall_3day = gr.Number(
+                label="🌧️ 3-Day Rainfall (mm)",
+                interactive=False
+            )
 
-        rainfall_7day = gr.Number(
-            label="7-Day Rainfall (mm)"
-        )
+        with gr.Column(elem_classes="metric-card"):
+            rainfall_7day = gr.Number(
+                label="🌧️ 7-Day Rainfall (mm)",
+                interactive=False
+            )
 
-        soil_moisture = gr.Number(
-            label="Soil Moisture (m³/m³)"
-        )
+        with gr.Column(elem_classes="metric-card"):
+            soil_moisture = gr.Number(
+                label="💧 Soil Moisture (m³/m³)",
+                interactive=False
+            )
 
 
     # ========================================================
-    # ⛰️ TERRAIN
+    # ⛰️ TERRAIN CONDITIONS
     # ========================================================
 
     gr.Markdown(
@@ -1484,17 +1696,21 @@ setTimeout(
 
     with gr.Row():
 
-        slope = gr.Number(
-            label="Slope (degrees)"
-        )
+        with gr.Column(elem_classes="metric-card"):
+            slope = gr.Number(
+                label="📐 Slope (degrees)",
+                interactive=False
+            )
 
-        elevation = gr.Number(
-            label="Elevation (m)"
-        )
+        with gr.Column(elem_classes="metric-card"):
+            elevation = gr.Number(
+                label="⛰️ Elevation (m)",
+                interactive=False
+            )
 
 
     # ========================================================
-    # 🌡️ WEATHER
+    # 🌡️ CURRENT WEATHER
     # ========================================================
 
     gr.Markdown(
@@ -1504,9 +1720,17 @@ setTimeout(
 
     with gr.Row():
 
-        temperature = gr.Number(
-            label="Temperature (°C)"
-        )
+        with gr.Column(elem_classes="metric-card"):
+            temperature = gr.Number(
+                label="🌡️ Temperature (°C)",
+                interactive=False
+            )
+
+        with gr.Column(elem_classes="metric-card"):
+            humidity = gr.Number(
+                label="💧 Humidity (%)",
+                interactive=False
+            )
 
         humidity = gr.Number(
             label="Humidity (%)"
