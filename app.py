@@ -691,7 +691,42 @@ body.night-mode .analyze-button {
     }
 
 }
+/* 🌌 NORTHERN LIGHTS - DAY MODE */
 
+body.day-mode {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(45, 212, 191, 0.30), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(34, 211, 238, 0.25), transparent 35%),
+        linear-gradient(135deg, #e6fffa, #dff7f4, #e8fbff) !important;
+}
+
+body.day-mode .gradio-container {
+    background: transparent !important;
+}
+
+body.day-mode .block,
+body.day-mode .form,
+body.day-mode .box {
+    background: rgba(255, 255, 255, 0.68) !important;
+    border: 1px solid rgba(20, 184, 166, 0.25) !important;
+    box-shadow: 0 8px 30px rgba(13, 148, 136, 0.12) !important;
+    backdrop-filter: blur(12px);
+}
+
+body.day-mode h1,
+body.day-mode h2,
+body.day-mode h3,
+body.day-mode label {
+    color: #064e49 !important;
+}
+
+body.day-mode input,
+body.day-mode textarea,
+body.day-mode select {
+    background: rgba(255, 255, 255, 0.85) !important;
+    color: #064e49 !important;
+    border-color: rgba(20, 184, 166, 0.35) !important;
+}
 """
 
 # ============================================================
