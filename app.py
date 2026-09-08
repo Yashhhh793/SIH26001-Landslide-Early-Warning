@@ -235,6 +235,64 @@ def predict_live_landslide_risk(lat, lon):
 
 
 # =======================================================
+# =======================================================
+# 🌍 SUPPORTED STATES
+# =======================================================
+
+SUPPORTED_STATES = [
+    "Assam",
+    "Arunachal Pradesh",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Sikkim",
+    "Tripura"
+]
+
+
+# =======================================================
+# 📍 DETECT STATE FROM COORDINATES
+# =======================================================
+
+def get_state_from_coordinates(lat, lon):
+
+    url = (
+        "https://nominatim.openstreetmap.org/reverse"
+        f"?lat={lat}"
+        f"&lon={lon}"
+        "&format=jsonv2"
+        "&addressdetails=1"
+        "&zoom=5"
+    )
+
+    headers = {
+        "User-Agent":
+            "SIH26001-Landslide-Early-Warning/1.0"
+    }
+
+    response = requests.get(
+        url,
+        headers=headers,
+        timeout=API_TIMEOUT
+    )
+
+    if response.status_code != 200:
+        raise Exception(
+            f"Location detection error: "
+            f"{response.status_code}"
+        )
+
+    data = response.json()
+
+    address = data.get("address", {})
+
+    state = address.get("state")
+
+    return state
+
+
+# =======================================================
 # 🎨 GRADIO FUNCTION
 # =======================================================
 
@@ -242,26 +300,95 @@ def gradio_prediction(lat, lon):
 
     try:
 
-        result = predict_live_landslide_risk(
-            float(lat),
-            float(lon)
+        if lat is None or lon is None:
+            raise Exception(
+                "Please select a location first."
+            )
+
+        lat = float(lat)
+        lon = float(lon)
+
+
+        # ------------------------------------------------
+        # DETECT STATE
+        # ------------------------------------------------
+
+        detected_state = get_state_from_coordinates(
+            lat,
+            lon
         )
 
+        print(
+            f"Selected coordinates: "
+            f"{lat}, {lon}"
+        )
+
+        print(
+            f"Detected state: "
+            f"{detected_state}"
+        )
+
+
+        # ------------------------------------------------
+        # BLOCK UNSUPPORTED REGION
+        # ------------------------------------------------
+
+        if detected_state not in SUPPORTED_STATES:
+
+            return (
+                "NOT SUPPORTED",
+                "N/A",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                (
+                    "⚠️ AI prediction is currently "
+                    "available only for Northeast India. "
+                    f"Selected state: "
+                    f"{detected_state or 'Unknown'}. "
+                    "The current model is not validated "
+                    "for this region."
+                )
+            )
+
+
+        # ------------------------------------------------
+        # RUN EXISTING AI MODEL
+        # ------------------------------------------------
+
+        result = predict_live_landslide_risk(
+            lat,
+            lon
+        )
+
+
         risk_level = result["risk_level"]
+
         risk_score = result["ai_risk_score"]
+
+
+        # ------------------------------------------------
+        # WARNING
+        # ------------------------------------------------
 
         if risk_level == "HIGH RISK":
 
             warning = (
                 "🚨 High landslide risk detected. "
-                "Exercise caution and monitor local warnings."
+                "Exercise caution and monitor "
+                "local warnings."
             )
 
         elif risk_level == "MODERATE RISK":
 
             warning = (
                 "⚠️ Moderate landslide risk. "
-                "Stay alert and monitor weather conditions."
+                "Stay alert and monitor "
+                "weather conditions."
             )
 
         else:
@@ -270,6 +397,11 @@ def gradio_prediction(lat, lon):
                 "✅ Lower landslide risk under "
                 "current conditions."
             )
+
+
+        # ------------------------------------------------
+        # RETURN RESULTS
+        # ------------------------------------------------
 
         return (
             risk_level,
@@ -283,6 +415,7 @@ def gradio_prediction(lat, lon):
             result["humidity_percent"],
             warning
         )
+
 
     except Exception as e:
 
@@ -298,7 +431,6 @@ def gradio_prediction(lat, lon):
             "-",
             f"❌ Error: {str(e)}"
         )
-
 
 # 
 # ============================================================
