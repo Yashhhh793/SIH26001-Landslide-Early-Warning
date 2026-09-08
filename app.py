@@ -431,7 +431,40 @@ def gradio_prediction(lat, lon):
             "-",
             f"❌ Error: {str(e)}"
         )
+    # ========================================================
+    # 📚 SYSTEM INFORMATION
+    # ========================================================
 
+    with gr.Row():
+
+        with gr.Column(elem_classes="info-panel"):
+
+            gr.Markdown("""
+### 📚 Data Sources
+
+🌧️ **Weather:** Open-Meteo API  
+⛰️ **Elevation:** Open-Meteo Elevation API  
+🗺️ **Map:** OpenStreetMap  
+🛰️ **Historical Landslides:** NASA Global Landslide Catalog  
+🤖 **AI Model:** Gradient Boosting Classifier
+""")
+
+        with gr.Column(elem_classes="info-panel"):
+
+            gr.Markdown("""
+### 🌍 Supported Regions
+
+**Northeast India**
+
+🇮🇳 Assam  
+🇮🇳 Arunachal Pradesh  
+🇮🇳 Manipur  
+🇮🇳 Meghalaya  
+🇮🇳 Mizoram  
+🇮🇳 Nagaland  
+🇮🇳 Sikkim  
+🇮🇳 Tripura
+""")
 # 
 # ============================================================
 # 🗺️ FINAL DASHBOARD UI
@@ -1183,6 +1216,189 @@ body.day-mode .warning-panel {
         font-size: 21px !important;
     }
 }
+/* ==========================================================
+   📍 PREMIUM LOCATION PANEL
+   ========================================================== */
+
+.location-panel {
+    border-radius: 22px !important;
+    padding: 18px !important;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease !important;
+}
+
+
+/* ☀️ DAY */
+
+body.day-mode .location-panel {
+    background: rgba(255,255,255,0.78) !important;
+    border: 1px solid rgba(13,148,136,0.22) !important;
+
+    box-shadow:
+        0 10px 30px rgba(13,148,136,0.10) !important;
+}
+
+
+/* 🌙 NIGHT */
+
+body.night-mode .location-panel {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8,42,39,0.90),
+            rgba(4,27,26,0.88)
+        ) !important;
+
+    border: 1px solid rgba(20,184,166,0.28) !important;
+
+    box-shadow:
+        0 12px 32px rgba(0,0,0,0.40),
+        0 0 25px rgba(20,184,166,0.07) !important;
+}
+
+
+/* Location inputs */
+
+.location-panel input {
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+}
+
+
+/* Night */
+
+body.night-mode .location-panel input {
+    background: rgba(3,25,23,0.75) !important;
+    color: #8fffe8 !important;
+}
+
+
+/* Day */
+
+body.day-mode .location-panel input {
+    background: rgba(255,255,255,0.85) !important;
+    color: #075e57 !important;
+}
+
+
+/* ==========================================================
+   🗺️ MAP PREMIUM FRAME
+   ========================================================== */
+
+body.night-mode #landslide-map {
+    border: 2px solid rgba(45,212,191,0.42) !important;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.45),
+        0 0 30px rgba(20,184,166,0.10) !important;
+}
+
+body.day-mode #landslide-map {
+    border: 2px solid rgba(13,148,136,0.30) !important;
+
+    box-shadow:
+        0 12px 30px rgba(13,148,136,0.14) !important;
+}
+
+
+/* ==========================================================
+   📚 INFO SECTION
+   ========================================================== */
+
+.info-panel {
+    margin-top: 30px !important;
+    padding: 22px !important;
+    border-radius: 20px !important;
+}
+
+
+body.night-mode .info-panel {
+    background: rgba(7,35,32,0.78) !important;
+
+    border: 1px solid rgba(20,184,166,0.22) !important;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.30) !important;
+
+    color: #d9fffa !important;
+}
+
+
+body.day-mode .info-panel {
+    background: rgba(255,255,255,0.82) !important;
+
+    border: 1px solid rgba(13,148,136,0.18) !important;
+
+    box-shadow:
+        0 8px 25px rgba(13,148,136,0.08) !important;
+
+    color: #24514b !important;
+}
+
+
+/* ==========================================================
+   🏆 SIH FOOTER
+   ========================================================== */
+
+.dashboard-footer {
+    margin-top: 35px !important;
+    padding: 22px 25px !important;
+
+    border-radius: 20px !important;
+
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+
+    gap: 20px !important;
+    flex-wrap: wrap !important;
+
+    font-size: 13px !important;
+}
+
+
+body.night-mode .dashboard-footer {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(5,40,37,0.92),
+            rgba(3,24,23,0.92)
+        ) !important;
+
+    border: 1px solid rgba(20,184,166,0.20) !important;
+
+    color: #b9fff5 !important;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.30) !important;
+}
+
+
+body.day-mode .dashboard-footer {
+    background: rgba(255,255,255,0.85) !important;
+
+    border: 1px solid rgba(13,148,136,0.16) !important;
+
+    color: #24514b !important;
+}
+
+
+/* Footer mobile */
+
+@media (max-width: 800px) {
+
+    .location-panel {
+        padding: 14px !important;
+    }
+
+    .dashboard-footer {
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+}
 """
 
 # ============================================================
@@ -1731,12 +1947,47 @@ setTimeout(
                 label="💧 Humidity (%)",
                 interactive=False
             )
+                # ========================================================
+    # 🏆 SIH FOOTER
+    # ========================================================
 
-        humidity = gr.Number(
-            label="Humidity (%)"
-        )
+    gr.HTML("""
+<div class="dashboard-footer">
 
+    <div>
+        <strong style="font-size:15px;">
+            🏔️ SIH26001
+        </strong>
 
+        <div style="margin-top:5px;">
+            Landslide Early Warning System
+        </div>
+
+        <div style="margin-top:4px; opacity:0.75;">
+            AI-Based Localized Risk Assessment
+        </div>
+    </div>
+
+    <div>
+        <strong>Powered By</strong>
+
+        <div style="margin-top:5px;">
+            🌧️ Open-Meteo &nbsp; • &nbsp;
+            🗺️ OpenStreetMap &nbsp; • &nbsp;
+            🛰️ NASA GLC
+        </div>
+    </div>
+
+    <div>
+        <strong>AI / ML</strong>
+
+        <div style="margin-top:5px;">
+            🤖 Gradient Boosting
+        </div>
+    </div>
+
+</div>
+""")
     # ========================================================
     # 🔗 STATE → COORDINATES
     # ========================================================
