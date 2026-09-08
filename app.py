@@ -691,6 +691,7 @@ body.night-mode .analyze-button {
     }
 
 }
+
 /* ==========================================================
    🤖 AI RISK ASSESSMENT - PREMIUM CARD
    ========================================================== */
@@ -736,6 +737,246 @@ body.day-mode .risk-card textarea {
     background: rgba(255, 255, 255, 0.9) !important;
     color: #064e49 !important;
     border-color: rgba(20, 184, 166, 0.35) !important;
+}
+/* ==========================================================
+   🌌 FINAL SIH DASHBOARD POLISH
+   ========================================================== */
+
+/* ---------- COMMON METRIC CARDS ---------- */
+
+body.day-mode .gradio-container .form,
+body.day-mode .gradio-container .block,
+body.night-mode .gradio-container .form,
+body.night-mode .gradio-container .block {
+    border-radius: 18px !important;
+    transition:
+        background 0.5s ease,
+        border-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+
+/* ==========================================================
+   🌧️ ENVIRONMENTAL / TERRAIN / WEATHER
+   ========================================================== */
+
+body.day-mode input,
+body.day-mode textarea {
+    border-radius: 12px !important;
+}
+
+body.night-mode input,
+body.night-mode textarea {
+    border-radius: 12px !important;
+}
+
+
+/* ---------- SECTION SPACING ---------- */
+
+.section-title {
+    letter-spacing: 0.2px;
+}
+
+
+/* ==========================================================
+   🌧️ ENVIRONMENTAL CONDITIONS
+   ========================================================== */
+
+body.day-mode .section-title {
+    color: #064e49 !important;
+}
+
+body.night-mode .section-title {
+    color: #d9fffa !important;
+}
+
+
+/* Metric value emphasis */
+
+body.day-mode input[type="number"],
+body.night-mode input[type="number"] {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+
+
+/* ==========================================================
+   📍 LOCATION PANEL
+   ========================================================== */
+
+body.night-mode #latitude_input input,
+body.night-mode #longitude_input input {
+    background: #102321 !important;
+    color: #8fffe8 !important;
+}
+
+body.day-mode #latitude_input input,
+body.day-mode #longitude_input input {
+    background: rgba(255,255,255,0.88) !important;
+    color: #064e49 !important;
+}
+
+
+/* ==========================================================
+   🔍 STATE SEARCH
+   ========================================================== */
+
+body.night-mode .gradio-dropdown,
+body.night-mode [role="listbox"] {
+    background: #102321 !important;
+    color: #e8fffb !important;
+}
+
+body.day-mode .gradio-dropdown {
+    background: rgba(255,255,255,0.90) !important;
+}
+
+
+/* ==========================================================
+   🔥 ANALYZE BUTTON
+   ========================================================== */
+
+.analyze-button {
+    margin-top: 8px !important;
+    border-radius: 14px !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.2px;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.analyze-button:hover {
+    transform: translateY(-2px);
+}
+
+body.night-mode .analyze-button {
+    box-shadow:
+        0 0 20px rgba(0,255,210,0.18),
+        0 8px 20px rgba(0,0,0,0.30);
+}
+
+
+/* ==========================================================
+   ⚠️ SYSTEM WARNING
+   ========================================================== */
+
+body.night-mode .gradio-textbox {
+    border-radius: 16px !important;
+}
+
+body.night-mode textarea {
+    background: rgba(7,25,23,0.85) !important;
+}
+
+
+/* ==========================================================
+   🗺️ MAP GLOW
+   ========================================================== */
+
+body.night-mode #landslide-map {
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.50),
+        0 0 35px rgba(0,188,174,0.12) !important;
+}
+
+body.day-mode #landslide-map {
+    box-shadow:
+        0 12px 30px rgba(13,148,136,0.15) !important;
+}
+
+
+/* ==========================================================
+   🌌 NIGHT AURORA EFFECT
+   ========================================================== */
+
+body.night-mode {
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(0,255,210,0.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(0,180,160,0.08),
+            transparent 30%
+        ),
+        #071413 !important;
+}
+
+
+/* ==========================================================
+   ☀️ DAY NORTHERN LIGHTS
+   ========================================================== */
+
+body.day-mode {
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(45,212,191,0.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(34,211,238,0.14),
+            transparent 30%
+        ),
+        #eaf9f6 !important;
+}
+
+
+/* ==========================================================
+   📱 MOBILE POLISH
+   ========================================================== */
+
+@media (max-width: 800px) {
+
+    .dashboard-header {
+        padding: 22px !important;
+        border-radius: 20px !important;
+    }
+
+    .dashboard-header h1 {
+        font-size: 26px !important;
+        line-height: 1.2;
+    }
+
+    .dashboard-header p {
+        font-size: 14px !important;
+    }
+
+    #landslide-map {
+        height: 360px !important;
+        border-radius: 16px !important;
+    }
+
+    .section-title {
+        font-size: 20px !important;
+    }
+
+    .risk-card input {
+        font-size: 18px !important;
+    }
+
+}
+
+
+/* ==========================================================
+   ✨ SMOOTH UI
+   ========================================================== */
+
+.gradio-container,
+.dashboard-header,
+.risk-card,
+.analyze-button,
+#landslide-map {
+    transition:
+        background 0.5s ease,
+        border-color 0.5s ease,
+        box-shadow 0.5s ease,
+        transform 0.2s ease;
 }
 """
 
