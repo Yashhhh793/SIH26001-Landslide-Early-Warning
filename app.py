@@ -1403,78 +1403,294 @@ body.day-mode .dashboard-footer {
    🌌 NORTHERN LIGHTS / AURORA BACKGROUND
    ========================================================== */
 
-body.night-mode::before {
+/* ==========================================================
+   🌌 PERMANENT NORTHERN LIGHTS + MOUNTAIN SILHOUETTE
+   NO DAY/NIGHT THEME SWITCH
+   ========================================================== */
+
+/* ---------- MAIN DARK TEAL BACKGROUND ---------- */
+
+body {
+    background:
+        radial-gradient(
+            ellipse at 50% 15%,
+            rgba(0, 120, 110, 0.18),
+            transparent 45%
+        ),
+        linear-gradient(
+            180deg,
+            #061c1b 0%,
+            #071413 55%,
+            #020b0b 100%
+        ) !important;
+
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+
+/* ---------- KEEP GRADIO TRANSPARENT ---------- */
+
+.gradio-container {
+    position: relative !important;
+    z-index: 2 !important;
+
+    background: transparent !important;
+}
+
+
+/* ==========================================================
+   🌌 FLOWING NORTHERN LIGHTS
+   ========================================================== */
+
+body::before {
     content: "";
+
     position: fixed;
-    top: -25%;
+
+    top: -10%;
     left: -15%;
+
     width: 130%;
-    height: 70%;
+    height: 75%;
+
+    pointer-events: none;
+
+    z-index: 0;
 
     background:
         radial-gradient(
-            ellipse at 20% 60%,
-            rgba(0,255,190,0.18),
-            transparent 45%
+            ellipse 35% 55% at 15% 55%,
+            rgba(0, 255, 190, 0.22),
+            transparent 65%
         ),
+
         radial-gradient(
-            ellipse at 50% 40%,
-            rgba(0,220,180,0.14),
-            transparent 48%
+            ellipse 30% 60% at 38% 35%,
+            rgba(0, 220, 180, 0.20),
+            transparent 65%
         ),
+
         radial-gradient(
-            ellipse at 80% 60%,
-            rgba(0,190,220,0.16),
-            transparent 45%
+            ellipse 35% 55% at 62% 50%,
+            rgba(0, 190, 220, 0.18),
+            transparent 65%
+        ),
+
+        radial-gradient(
+            ellipse 30% 50% at 85% 35%,
+            rgba(0, 255, 170, 0.16),
+            transparent 65%
         );
 
-    filter: blur(35px);
+    filter: blur(28px);
 
     transform: rotate(-5deg);
 
-    pointer-events: none;
-
-    z-index: 0;
+    animation:
+        auroraFlow 12s ease-in-out infinite alternate;
 }
 
 
-/* Aurora second glow */
+/* ==========================================================
+   ✨ AURORA LIGHT RIBBON
+   ========================================================== */
 
-body.night-mode::after {
+body::after {
     content: "";
+
     position: fixed;
 
-    top: 0;
-    left: -10%;
+    top: -5%;
+    left: -20%;
 
-    width: 120%;
-    height: 55%;
+    width: 140%;
+    height: 65%;
+
+    pointer-events: none;
+
+    z-index: 0;
 
     background:
         linear-gradient(
-            120deg,
-            transparent 20%,
-            rgba(0,255,190,0.08) 35%,
-            rgba(0,220,190,0.14) 48%,
-            rgba(0,180,220,0.08) 62%,
-            transparent 78%
+            110deg,
+            transparent 10%,
+            rgba(0, 255, 190, 0.03) 25%,
+            rgba(0, 255, 200, 0.14) 38%,
+            rgba(0, 220, 190, 0.20) 48%,
+            rgba(0, 200, 220, 0.12) 58%,
+            rgba(0, 255, 190, 0.05) 70%,
+            transparent 85%
         );
 
-    filter: blur(30px);
+    filter: blur(22px);
 
-    transform: skewY(-4deg);
+    transform: skewX(-12deg) rotate(-4deg);
 
-    pointer-events: none;
-
-    z-index: 0;
+    animation:
+        auroraWave 10s ease-in-out infinite alternate;
 }
 
 
-/* Keep dashboard above aurora */
+/* ==========================================================
+   🌌 AURORA ANIMATION
+   ========================================================== */
 
-body.night-mode .gradio-container {
-    position: relative;
-    z-index: 1;
+@keyframes auroraFlow {
+
+    0% {
+        transform:
+            translateX(-4%)
+            rotate(-5deg)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translateX(3%)
+            rotate(-2deg)
+            scale(1.05);
+    }
+
+    100% {
+        transform:
+            translateX(-1%)
+            rotate(-6deg)
+            scale(1.08);
+    }
+}
+
+
+@keyframes auroraWave {
+
+    0% {
+        transform:
+            translateX(-5%)
+            skewX(-12deg)
+            rotate(-4deg);
+    }
+
+    50% {
+        transform:
+            translateX(5%)
+            skewX(-7deg)
+            rotate(-2deg);
+    }
+
+    100% {
+        transform:
+            translateX(-2%)
+            skewX(-15deg)
+            rotate(-5deg);
+    }
+}
+
+
+/* ==========================================================
+   🏔️ MOUNTAIN SILHOUETTE
+   ========================================================== */
+
+.dashboard-footer::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: 100%;
+
+    height: 170px;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            transparent 0 18%,
+            #031211 18% 30%,
+            transparent 30% 34%,
+            #041715 34% 48%,
+            transparent 48% 52%,
+            #020d0d 52% 66%,
+            transparent 66% 70%,
+            #031211 70% 84%,
+            transparent 84%
+        );
+
+    clip-path: polygon(
+        0 100%,
+        0 72%,
+        8% 55%,
+        15% 78%,
+        23% 38%,
+        31% 70%,
+        40% 48%,
+        48% 75%,
+        58% 35%,
+        67% 68%,
+        76% 45%,
+        85% 72%,
+        93% 50%,
+        100% 70%,
+        100% 100%
+    );
+
+    opacity: 0.95;
+}
+
+
+/* Footer becomes mountain anchor */
+
+.dashboard-footer {
+    position: relative !important;
+}
+
+
+/* ==========================================================
+   🌲 EXTRA DARK FOREGROUND
+   ========================================================== */
+
+body .gradio-container::after {
+    content: "";
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 90px;
+
+    pointer-events: none;
+
+    z-index: -1;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(1, 10, 10, 0.95),
+            transparent
+        );
+}
+
+
+/* ==========================================================
+   📱 MOBILE AURORA
+   ========================================================== */
+
+@media (max-width: 800px) {
+
+    body::before {
+        height: 60%;
+        filter: blur(24px);
+    }
+
+    body::after {
+        height: 50%;
+        filter: blur(18px);
+    }
+
 }
 """
 
@@ -1865,28 +2081,6 @@ function syncMapWithInputs() {
 // ==========================================================
 // AUTOMATIC DAY / NIGHT THEME
 // ==========================================================
-
-function updateTheme() {
-    const hour = new Date().getHours();
-
-    document.body.classList.remove(
-        "day-mode",
-        "night-mode"
-    );
-
-    if (hour >= 6 && hour < 18) {
-        document.body.classList.add("day-mode");
-    } else {
-        document.body.classList.add("night-mode");
-    }
-}
-
-updateTheme();
-
-setInterval(
-    updateTheme,
-    60000
-);
 // Check coordinates regularly
 setInterval(
     syncMapWithInputs,
