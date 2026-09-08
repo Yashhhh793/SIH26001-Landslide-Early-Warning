@@ -691,6 +691,52 @@ body.night-mode .analyze-button {
     }
 
 }
+/* ==========================================================
+   🤖 AI RISK ASSESSMENT - PREMIUM CARD
+   ========================================================== */
+
+.risk-card {
+    border-radius: 18px !important;
+    border: 1px solid rgba(20, 184, 166, 0.35) !important;
+    overflow: hidden !important;
+}
+
+.risk-card input,
+.risk-card textarea {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    min-height: 55px !important;
+}
+
+/* 🌙 NIGHT MODE */
+
+body.night-mode .risk-card {
+    background: rgba(0, 35, 32, 0.75) !important;
+    box-shadow:
+        0 0 25px rgba(20, 184, 166, 0.12),
+        inset 0 0 20px rgba(0, 255, 200, 0.03) !important;
+}
+
+body.night-mode .risk-card input,
+body.night-mode .risk-card textarea {
+    background: rgba(0, 20, 18, 0.85) !important;
+    color: #8fffe8 !important;
+    border-color: rgba(20, 184, 166, 0.35) !important;
+}
+
+/* ☀️ DAY MODE */
+
+body.day-mode .risk-card {
+    background: rgba(255, 255, 255, 0.72) !important;
+    box-shadow: 0 8px 25px rgba(13, 148, 136, 0.12) !important;
+}
+
+body.day-mode .risk-card input,
+body.day-mode .risk-card textarea {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #064e49 !important;
+    border-color: rgba(20, 184, 166, 0.35) !important;
+}
 """
 
 # ============================================================
