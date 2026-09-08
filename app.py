@@ -1030,7 +1030,31 @@ function syncMapWithInputs() {
 
 }
 
+// ==========================================================
+// AUTOMATIC DAY / NIGHT THEME
+// ==========================================================
 
+function updateTheme() {
+    const hour = new Date().getHours();
+
+    document.body.classList.remove(
+        "day-mode",
+        "night-mode"
+    );
+
+    if (hour >= 6 && hour < 18) {
+        document.body.classList.add("day-mode");
+    } else {
+        document.body.classList.add("night-mode");
+    }
+}
+
+updateTheme();
+
+setInterval(
+    updateTheme,
+    60000
+);
 // Check coordinates regularly
 setInterval(
     syncMapWithInputs,
