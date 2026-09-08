@@ -707,31 +707,79 @@ with gr.Blocks(
     # ========================================================
 
     gr.HTML("""
-    <div class="dashboard-header">
+<div class="dashboard-header">
 
-        <h1>
-            🚨 Landslide Early Warning System
-        </h1>
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:25px;
+        flex-wrap:wrap;
+    ">
 
-        <p>
-            AI-Based Localized Landslide Risk Assessment
-            for Northeast India
-        </p>
+        <div>
+            <h1 style="margin:0;">
+                🏔️ Landslide Early Warning System
+            </h1>
+
+            <p style="
+                margin:8px 0 0;
+                font-size:16px;
+            ">
+                AI-Based Localized Landslide Risk Assessment for Northeast India
+            </p>
+
+            <div style="
+                margin-top:14px;
+                font-size:14px;
+                display:flex;
+                gap:18px;
+                flex-wrap:wrap;
+            ">
+                <span>🌧️ Rainfall</span>
+                <span>💧 Soil Moisture</span>
+                <span>⛰️ Terrain</span>
+                <span>🛰️ Environmental Data</span>
+                <span>🤖 AI Risk Assessment</span>
+            </div>
+        </div>
 
         <div style="
-            margin-top:12px;
-            font-size:14px;
-            opacity:0.95;
+            padding:14px 18px;
+            border-radius:16px;
+            background:rgba(0,0,0,0.16);
+            border:1px solid rgba(255,255,255,0.20);
+            text-align:center;
+            min-width:150px;
         ">
-            🌧️ Rainfall &nbsp; • &nbsp;
-            💧 Soil Moisture &nbsp; • &nbsp;
-            ⛰️ Terrain &nbsp; • &nbsp;
-            🤖 AI Risk Assessment
+            <div style="
+                font-size:13px;
+                opacity:0.85;
+            ">
+                🌗 AUTOMATIC THEME
+            </div>
+
+            <div style="
+                margin-top:5px;
+                font-size:17px;
+                font-weight:700;
+            ">
+                Day / Night
+            </div>
+
+            <div style="
+                margin-top:4px;
+                font-size:12px;
+                opacity:0.75;
+            ">
+                6 AM – 6 PM
+            </div>
         </div>
 
     </div>
-    """)
 
+</div>
+""")
 
     # ========================================================
     # 📍 LOCATION SECTION
