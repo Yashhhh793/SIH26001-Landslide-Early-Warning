@@ -434,78 +434,263 @@ def gradio_prediction(lat, lon):
 
 # 
 # ============================================================
-# 🗺️ FINAL GRADIO UI WITH INTERACTIVE MAP
+# 🗺️ FINAL DASHBOARD UI
+# STATE SEARCH + MAP + AUTO COORDINATES + DAY/NIGHT THEME
+# ============================================================
+
+STATE_COORDINATES = {
+    "Assam": (26.1445, 91.7362),              # Guwahati
+    "Arunachal Pradesh": (27.0844, 93.6053), # Itanagar
+    "Manipur": (24.8170, 93.9368),            # Imphal
+    "Meghalaya": (25.5788, 91.8933),          # Shillong
+    "Mizoram": (23.7271, 92.7176),            # Aizawl
+    "Nagaland": (25.6751, 94.1086),           # Kohima
+    "Sikkim": (27.3389, 88.6065),             # Sikkim
+    "Tripura": (23.8315, 91.2868)             # Agartala
+}
+
+
+def select_state(state):
+
+    if state in STATE_COORDINATES:
+        return STATE_COORDINATES[state]
+
+    return 27.3389, 88.6065
+
+
+# ============================================================
+# 🎨 CUSTOM DASHBOARD STYLE
+# ============================================================
+
+CUSTOM_CSS = """
+
+/* ------------------------------
+   MAIN BACKGROUND
+--------------------------------*/
+
+body {
+    transition: background 0.8s ease;
+}
+
+.gradio-container {
+    max-width: 1450px !important;
+}
+
+
+/* ------------------------------
+   HEADER
+--------------------------------*/
+
+.dashboard-header {
+    padding: 28px;
+    border-radius: 22px;
+    margin-bottom: 20px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 137, 123, 0.95),
+            rgba(0, 105, 92, 0.90)
+        );
+    color: white;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+}
+
+.dashboard-header h1 {
+    font-size: 34px;
+    margin: 0;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+
+/* ------------------------------
+   SECTION HEADINGS
+--------------------------------*/
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+
+/* ------------------------------
+   GLASS CARDS
+--------------------------------*/
+
+.glass-card {
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid rgba(0, 137, 123, 0.30);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+}
+
+
+/* ------------------------------
+   RISK CARD
+--------------------------------*/
+
+.risk-card {
+    border-radius: 20px;
+    padding: 22px;
+    border: 2px solid rgba(0, 137, 123, 0.35);
+    text-align: center;
+}
+
+
+/* ------------------------------
+   MAP
+--------------------------------*/
+
+#landslide-map {
+    height: 500px !important;
+    width: 100% !important;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(0, 137, 123, 0.45);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+}
+
+
+/* ------------------------------
+   BUTTON
+--------------------------------*/
+
+.analyze-button {
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+}
+
+
+/* ------------------------------
+   STATUS
+--------------------------------*/
+
+.status-pill {
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    background: rgba(0, 137, 123, 0.12);
+}
+
+"""
+
+
+# ============================================================
+# 🚨 DASHBOARD
 # ============================================================
 
 with gr.Blocks(
-    title="Landslide Early Warning System"
+    title="Landslide Early Warning System",
+    css=CUSTOM_CSS
 ) as demo:
 
-    gr.Markdown("""
-# 🚨 Landslide Early Warning System
-
-### AI-Based Localized Landslide Risk Assessment
-
-Select a location on the map or enter latitude and longitude manually.
-The system fetches live environmental and terrain data and calculates
-the localized landslide risk.
-""")
-
     # ========================================================
-    # LOCATION
+    # HEADER
     # ========================================================
 
-    gr.Markdown("## 📍 Select Location")
+    gr.HTML("""
+    <div class="dashboard-header">
+
+        <h1>
+            🚨 Landslide Early Warning System
+        </h1>
+
+        <p>
+            AI-Based Localized Landslide Risk Assessment
+            for Northeast India
+        </p>
+
+        <div style="
+            margin-top:12px;
+            font-size:14px;
+            opacity:0.95;
+        ">
+            🌧️ Rainfall &nbsp; • &nbsp;
+            💧 Soil Moisture &nbsp; • &nbsp;
+            ⛰️ Terrain &nbsp; • &nbsp;
+            🤖 AI Risk Assessment
+        </div>
+
+    </div>
+    """)
+
+
+    # ========================================================
+    # 📍 LOCATION SECTION
+    # ========================================================
+
+    gr.Markdown(
+        "## 📍 Select Location",
+        elem_classes="section-title"
+    )
 
     with gr.Row():
 
         # ----------------------------------------------------
-        # LATITUDE / LONGITUDE
+        # LOCATION SEARCH
         # ----------------------------------------------------
 
         with gr.Column(scale=1):
 
+            state_selector = gr.Dropdown(
+                choices=list(STATE_COORDINATES.keys()),
+                value="Sikkim",
+                label="🔍 Search Northeast State",
+                info="Only states covered by the current AI model.",
+                allow_custom_value=False,
+                filterable=True
+            )
+
             latitude = gr.Number(
                 label="Latitude",
                 value=27.3389,
+                precision=6,
                 elem_id="latitude_input"
             )
 
             longitude = gr.Number(
                 label="Longitude",
                 value=88.6065,
+                precision=6,
                 elem_id="longitude_input"
             )
 
-            gr.Markdown(
-                "💡 Click anywhere on the map to select a location."
-            )
+            gr.Markdown("""
+            💡 **How to select a location**
+
+            • Search a Northeast state above  
+            • Or click directly on the map  
+            • Coordinates update automatically
+            """)
 
             predict_button = gr.Button(
                 "🔍 Analyze Landslide Risk",
-                variant="primary"
+                variant="primary",
+                elem_classes="analyze-button"
             )
 
+
         # ----------------------------------------------------
-        # INTERACTIVE MAP
+        # MAP
         # ----------------------------------------------------
 
         with gr.Column(scale=2):
 
             map_html = gr.HTML(
                 html_template="""
-                <div id="landslide-map"
-                     style="
-                        width:100%;
-                        height:450px;
-                        border-radius:12px;
-                        overflow:hidden;
-                        border:2px solid #777;
-                     ">
-                </div>
+
+                <div id="landslide-map"></div>
+
                 """,
 
                 head="""
+
                 <link
                     rel="stylesheet"
                     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -514,6 +699,7 @@ the localized landslide risk.
                 <script
                     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
                 </script>
+
                 """,
 
                 js_on_load="""
@@ -526,39 +712,53 @@ the localized landslide risk.
                     return;
                 }
 
-                // Create map
-                const map = L.map(mapContainer).setView(
+
+                // ------------------------------------------------
+                // MAP
+                // ------------------------------------------------
+
+                const map = L.map(
+                    mapContainer
+                ).setView(
                     [27.3389, 88.6065],
                     7
                 );
 
-                // OpenStreetMap
+
+                // ------------------------------------------------
+                // OPEN STREET MAP
+                // ------------------------------------------------
+
                 L.tileLayer(
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                     {
+                        maxZoom: 19,
                         attribution:
                             "&copy; OpenStreetMap contributors"
                     }
                 ).addTo(map);
 
 
-                // Initial marker
+                // ------------------------------------------------
+                // MARKER
+                // ------------------------------------------------
+
                 let marker = L.marker(
                     [27.3389, 88.6065]
                 ).addTo(map);
 
+
                 marker.bindPopup(
-                    "<b>Selected Location</b><br>" +
-                    "Latitude: 27.3389<br>" +
-                    "Longitude: 88.6065"
+                    "<b>📍 Selected Location</b><br>" +
+                    "Sikkim"
                 );
 
 
                 // ------------------------------------------------
-                // UPDATE GRADIO NUMBER INPUT
+                // UPDATE GRADIO INPUT
                 // ------------------------------------------------
 
-                function updateGradioInput(
+                function updateInput(
                     componentId,
                     value
                 ) {
@@ -568,55 +768,35 @@ the localized landslide risk.
                             "#" + componentId
                         );
 
-                    if (!component) {
-                        console.log(
-                            "Component not found:",
-                            componentId
-                        );
-                        return;
-                    }
+                    if (!component) return;
 
                     const input =
                         component.querySelector("input");
 
-                    if (!input) {
-                        console.log(
-                            "Input not found:",
-                            componentId
-                        );
-                        return;
-                    }
+                    if (!input) return;
 
-
-                    const nativeSetter =
+                    const setter =
                         Object.getOwnPropertyDescriptor(
                             HTMLInputElement.prototype,
                             "value"
                         ).set;
 
-
-                    nativeSetter.call(
+                    setter.call(
                         input,
                         String(value)
                     );
 
-
                     input.dispatchEvent(
                         new Event(
                             "input",
-                            {
-                                bubbles: true
-                            }
+                            {bubbles: true}
                         )
                     );
-
 
                     input.dispatchEvent(
                         new Event(
                             "change",
-                            {
-                                bubbles: true
-                            }
+                            {bubbles: true}
                         )
                     );
                 }
@@ -637,27 +817,23 @@ the localized landslide risk.
                             event.latlng.lng.toFixed(6);
 
 
-                        // Move marker
                         marker.setLatLng(
                             [lat, lon]
                         );
 
 
-                        // Update latitude
-                        updateGradioInput(
+                        updateInput(
                             "latitude_input",
                             lat
                         );
 
 
-                        // Update longitude
-                        updateGradioInput(
+                        updateInput(
                             "longitude_input",
                             lon
                         );
 
 
-                        // Popup
                         marker.bindPopup(
                             "<b>📍 Selected Location</b><br><br>" +
                             "Latitude: " +
@@ -671,7 +847,135 @@ the localized landslide risk.
                 );
 
 
-                // Fix map size after rendering
+                // ------------------------------------------------
+                // WATCH COORDINATES
+                // State search changes Python inputs.
+                // This keeps map synchronized.
+                // ------------------------------------------------
+
+                let lastLat = 27.3389;
+                let lastLon = 88.6065;
+
+
+                setInterval(
+                    function() {
+
+                        const latInput =
+                            document.querySelector(
+                                "#latitude_input input"
+                            );
+
+                        const lonInput =
+                            document.querySelector(
+                                "#longitude_input input"
+                            );
+
+
+                        if (!latInput || !lonInput)
+                            return;
+
+
+                        const lat =
+                            parseFloat(latInput.value);
+
+                        const lon =
+                            parseFloat(lonInput.value);
+
+
+                        if (
+                            Number.isNaN(lat) ||
+                            Number.isNaN(lon)
+                        )
+                            return;
+
+
+                        if (
+                            lat !== lastLat ||
+                            lon !== lastLon
+                        ) {
+
+                            lastLat = lat;
+                            lastLon = lon;
+
+
+                            marker.setLatLng(
+                                [lat, lon]
+                            );
+
+
+                            map.setView(
+                                [lat, lon],
+                                9
+                            );
+
+
+                            marker.bindPopup(
+                                "<b>📍 Selected Location</b><br><br>" +
+                                "Latitude: " +
+                                lat.toFixed(6) +
+                                "<br>" +
+                                "Longitude: " +
+                                lon.toFixed(6)
+                            );
+
+                        }
+
+                    },
+                    700
+                );
+
+
+                // ------------------------------------------------
+                // DAY / NIGHT MODE
+                // ------------------------------------------------
+
+                function updateTheme() {
+
+                    const hour =
+                        new Date().getHours();
+
+
+                    if (
+                        hour >= 6 &&
+                        hour < 18
+                    ) {
+
+                        document.body.classList.remove(
+                            "night-mode"
+                        );
+
+                        document.body.classList.add(
+                            "day-mode"
+                        );
+
+                    } else {
+
+                        document.body.classList.remove(
+                            "day-mode"
+                        );
+
+                        document.body.classList.add(
+                            "night-mode"
+                        );
+
+                    }
+
+                }
+
+
+                updateTheme();
+
+
+                setInterval(
+                    updateTheme,
+                    60000
+                );
+
+
+                // ------------------------------------------------
+                // MAP SIZE FIX
+                // ------------------------------------------------
+
                 setTimeout(
                     function() {
                         map.invalidateSize();
@@ -684,33 +988,45 @@ the localized landslide risk.
 
 
     # ========================================================
-    # LANDSLIDE RISK ASSESSMENT
+    # 🚨 RISK ASSESSMENT
     # ========================================================
 
-    gr.Markdown("## 🚨 Landslide Risk Assessment")
+    gr.Markdown(
+        "## 🚨 Landslide Risk Assessment",
+        elem_classes="section-title"
+    )
 
     with gr.Row():
 
-        risk_level = gr.Textbox(
-            label="Risk Level"
-        )
+        with gr.Column():
 
-        risk_score = gr.Textbox(
-            label="Landslide Risk Score"
-        )
+            risk_level = gr.Textbox(
+                label="Risk Level",
+                elem_classes="risk-card"
+            )
+
+        with gr.Column():
+
+            risk_score = gr.Textbox(
+                label="AI Risk Score",
+                elem_classes="risk-card"
+            )
 
 
     warning = gr.Textbox(
-        label="System Warning",
+        label="⚠️ System Warning",
         lines=2
     )
 
 
     # ========================================================
-    # ENVIRONMENTAL CONDITIONS
+    # 🌧️ ENVIRONMENTAL CONDITIONS
     # ========================================================
 
-    gr.Markdown("## 🌧️ Environmental Conditions")
+    gr.Markdown(
+        "## 🌧️ Environmental Conditions",
+        elem_classes="section-title"
+    )
 
     with gr.Row():
 
@@ -728,10 +1044,13 @@ the localized landslide risk.
 
 
     # ========================================================
-    # TERRAIN CONDITIONS
+    # ⛰️ TERRAIN
     # ========================================================
 
-    gr.Markdown("## ⛰️ Terrain Conditions")
+    gr.Markdown(
+        "## ⛰️ Terrain Conditions",
+        elem_classes="section-title"
+    )
 
     with gr.Row():
 
@@ -745,10 +1064,13 @@ the localized landslide risk.
 
 
     # ========================================================
-    # CURRENT WEATHER
+    # 🌡️ WEATHER
     # ========================================================
 
-    gr.Markdown("## 🌡️ Current Weather")
+    gr.Markdown(
+        "## 🌡️ Current Weather",
+        elem_classes="section-title"
+    )
 
     with gr.Row():
 
@@ -762,7 +1084,21 @@ the localized landslide risk.
 
 
     # ========================================================
-    # EXISTING PREDICTION FUNCTION
+    # 🔗 STATE → COORDINATES
+    # ========================================================
+
+    state_selector.change(
+        fn=select_state,
+        inputs=state_selector,
+        outputs=[
+            latitude,
+            longitude
+        ]
+    )
+
+
+    # ========================================================
+    # 🤖 AI PREDICTION
     # ========================================================
 
     predict_button.click(
@@ -789,7 +1125,7 @@ the localized landslide risk.
 
 
 # ============================================================
-# 🌐 SERVER LAUNCH
+# 🌐 SERVER
 # ============================================================
 
 demo.launch(
@@ -798,5 +1134,6 @@ demo.launch(
         os.environ.get("PORT", 10000)
     )
 )
+            
 
-    
+                    
