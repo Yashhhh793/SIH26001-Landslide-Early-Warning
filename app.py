@@ -469,7 +469,13 @@ def gradio_prediction(lat, lon):
         # ------------------------------------------------
         # RETURN RESULTS
         # ------------------------------------------------
-
+        # 🚨 AI ALERT STATUS
+        if risk_level == "HIGH RISK":
+            alert_message = "🚨 HIGH RISK ALERT ACTIVE — Immediate caution advised."
+        elif risk_level == "MODERATE RISK":
+            alert_message = "⚠️ MODERATE RISK ALERT — Stay alert and monitor conditions."
+        else:
+            alert_message = "🟢 SYSTEM NORMAL — Lower landslide risk."
         return (
             risk_level,
             f"{risk_score}%",
@@ -480,8 +486,9 @@ def gradio_prediction(lat, lon):
             result["elevation_m"],
             result["temperature_c"],
             result["humidity_percent"],
-            warning
-        )
+            warning,
+            alert_message
+    )
 
 
     except Exception as e:
@@ -496,8 +503,9 @@ def gradio_prediction(lat, lon):
             "-",
             "-",
             "-",
-            f"❌ Error: {str(e)}"
-        )
+        f"❌ Error: {str(e)}",
+        f"🚨 Alert unavailable: {str(e)}"
+    )
     # ========================================================
     # 📚 SYSTEM INFORMATION
     # ========================================================
@@ -2243,7 +2251,8 @@ setTimeout(
                 label="🚨 AI Alert Status",
                 value="🟢 SYSTEM READY",
                 interactive=False,
-                lines=2
+                lines=2,
+                elem_id="ai-alert-status"
             )
 
         with gr.Column(elem_classes="alert-panel"):
@@ -2261,6 +2270,146 @@ setTimeout(
             "🔔 Enable Browser Alerts",
             variant="secondary"
         )
+            enable_alerts_button.click(
+        fn=None,
+        js="""
+        async () => {
+            try {
+                if ("Notification" in window) {
+
+                    const permission =
+                        await Notification.requestPermission();
+
+                    if (permission === "granted") {
+
+                        localStorage.setItem(
+                            "landslide_alerts_enabled",
+                            "true"
+                        );
+
+                        // Unlock browser audio
+                        const AudioContext =
+                            window.AudioContext ||
+                            window.webkitAudioContext;
+
+                        if (AudioContext) {
+                            const audioContext =
+                                new AudioContext();
+
+                            await audioContext.resume();
+
+                            window.landslideAudioContext =
+                                audioContext;
+                        }
+
+                        new Notification(
+                            "🚨 Landslide Alert System",
+                            {
+                                body:
+                                "Browser alerts are now enabled."
+                            }
+                        );
+
+                        // =====================================================
+// 🚨 AUTOMATIC HIGH-RISK ALERT WATCHER
+// =====================================================
+
+if (!window.landslideAlertWatcher) {
+
+    let lastAlertState = "";
+
+    window.landslideAlertWatcher = setInterval(() => {
+
+        const alertBox = document.querySelector(
+            "#ai-alert-status input, #ai-alert-status textarea"
+        );
+
+        if (!alertBox) return;
+
+        const alertText = alertBox.value || "";
+
+        const isHighRisk =
+            alertText.includes("HIGH RISK ALERT ACTIVE");
+
+        if (isHighRisk && lastAlertState !== "HIGH") {
+
+            lastAlertState = "HIGH";
+
+            if (Notification.permission === "granted") {
+                new Notification(
+                    "🚨 HIGH LANDSLIDE RISK",
+                    {
+                        body:
+                        "High landslide risk detected at the analyzed location. Exercise caution and monitor local warnings."
+                    }
+                );
+            }
+
+            const audioContext =
+                window.landslideAudioContext;
+
+            if (audioContext) {
+
+                for (let i = 0; i < 3; i++) {
+
+                    setTimeout(() => {
+
+                        const oscillator =
+                            audioContext.createOscillator();
+
+                        const gain =
+                            audioContext.createGain();
+
+                        oscillator.frequency.value = 880;
+                        oscillator.type = "sine";
+
+                        gain.gain.setValueAtTime(
+                            0.08,
+                            audioContext.currentTime
+                        );
+
+                        oscillator.connect(gain);
+                        gain.connect(audioContext.destination);
+
+                        oscillator.start();
+
+                        oscillator.stop(
+                            audioContext.currentTime + 0.25
+                        );
+
+                    }, i * 500);
+                }
+            }
+        }
+
+        if (!isHighRisk) {
+            lastAlertState = "";
+        }
+
+    }, 1000);
+}
+
+                    } else {
+                        alert(
+                            "Notification permission was not granted."
+                        );
+                    }
+
+                } else {
+                    alert(
+                        "This browser does not support notifications."
+                    );
+                }
+
+            } catch (error) {
+                console.error(
+                    "Alert setup error:",
+                    error
+                );
+            }
+        }
+        """
+    )
 
         sos_button = gr.Button(
             "🆘 EMERGENCY SOS",
@@ -2428,7 +2577,8 @@ setTimeout(
             elevation,
             temperature,
             humidity,
-            warning
+            warning,
+            alert_status
         ]
     )
         # ========================================================
