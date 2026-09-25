@@ -155,6 +155,73 @@ def classify_risk(risk_score):
     else:
         return "LOWER RISK"
 
+from datetime import datetime
+import uuid
+
+# =========================
+# ALERT + SOS ENGINE
+# =========================
+
+def create_alert_event(risk_score, risk_level, lat, lon):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if risk_level == "HIGH":
+        return {
+            "type": "AI_ALERT",
+            "status": "ACTIVE",
+            "level": "HIGH",
+            "score": round(risk_score, 2),
+            "latitude": lat,
+            "longitude": lon,
+            "timestamp": timestamp,
+            "message": "🚨 HIGH LANDSLIDE RISK — Immediate caution advised."
+        }
+
+    elif risk_level == "MODERATE":
+        return {
+            "type": "AI_WARNING",
+            "status": "WARNING",
+            "level": "MODERATE",
+            "score": round(risk_score, 2),
+            "latitude": lat,
+            "longitude": lon,
+            "timestamp": timestamp,
+            "message": "⚠️ MODERATE LANDSLIDE RISK — Stay alert."
+        }
+
+    return {
+        "type": "AI_STATUS",
+        "status": "NORMAL",
+        "level": "LOWER",
+        "score": round(risk_score, 2),
+        "latitude": lat,
+        "longitude": lon,
+        "timestamp": timestamp,
+        "message": "✅ Lower landslide risk under current conditions."
+    }
+
+
+def trigger_sos(lat, lon):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    sos_id = "SOS-" + uuid.uuid4().hex[:8].upper()
+
+    if lat is None or lon is None:
+        return (
+            "❌ SOS FAILED",
+            "Please select/analyze a valid location first."
+        )
+
+    message = (
+        f"🆘 EMERGENCY SOS ACTIVE\n\n"
+        f"SOS ID: {sos_id}\n"
+        f"Latitude: {lat}\n"
+        f"Longitude: {lon}\n"
+        f"Time: {timestamp}\n\n"
+        f"Emergency event recorded successfully."
+    )
+
+    return "🆘 SOS ACTIVE", message
+
 
 # =======================================================
 # 🤖 COMPLETE LIVE PREDICTION
@@ -1692,6 +1759,24 @@ body .gradio-container::after {
     }
 
 }
+/* ==========================================================
+   🆘 EMERGENCY SOS
+   ========================================================== */
+
+.sos-button {
+    min-height: 60px !important;
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    border-radius: 15px !important;
+}
+
+.alert-panel {
+    border-radius: 18px !important;
+}
+
+.sos-button:hover {
+    transform: scale(1.02);
+}
 """
 
 # ============================================================
@@ -2141,6 +2226,54 @@ setTimeout(
         elem_classes="warning-panel"
     )
 
+        # ========================================================
+    # 🆘 EMERGENCY SOS + ALERT SYSTEM
+    # ========================================================
+
+    gr.Markdown(
+        "## 🆘 Emergency & Alert System",
+        elem_classes="section-title"
+    )
+
+    with gr.Row():
+
+        with gr.Column(elem_classes="alert-panel"):
+
+            alert_status = gr.Textbox(
+                label="🚨 AI Alert Status",
+                value="🟢 SYSTEM READY",
+                interactive=False,
+                lines=2
+            )
+
+        with gr.Column(elem_classes="alert-panel"):
+
+            sos_status = gr.Textbox(
+                label="🆘 Emergency SOS",
+                value="SYSTEM READY",
+                interactive=False,
+                lines=2
+            )
+
+    with gr.Row():
+
+        enable_alerts_button = gr.Button(
+            "🔔 Enable Browser Alerts",
+            variant="secondary"
+        )
+
+        sos_button = gr.Button(
+            "🆘 EMERGENCY SOS",
+            variant="stop",
+            elem_classes="sos-button"
+        )
+
+    sos_details = gr.Textbox(
+        label="📋 SOS Event Details",
+        lines=5,
+        interactive=False
+    )
+
 
     # ========================================================
     # 🌧️ ENVIRONMENTAL CONDITIONS
@@ -2296,6 +2429,21 @@ setTimeout(
             temperature,
             humidity,
             warning
+        ]
+    )
+        # ========================================================
+    # 🆘 EMERGENCY SOS EVENT
+    # ========================================================
+
+    sos_button.click(
+        fn=trigger_sos,
+        inputs=[
+            latitude,
+            longitude
+        ],
+        outputs=[
+            sos_status,
+            sos_details
         ]
     )
 
