@@ -2267,7 +2267,7 @@ setTimeout(
             "🔔 Enable Browser Alerts",
             variant="secondary"
         )
-            enable_alerts_button.click(
+        enable_alerts_button.click(
         fn=None,
         js="""
         async () => {
