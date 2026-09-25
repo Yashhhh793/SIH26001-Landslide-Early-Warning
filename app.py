@@ -503,15 +503,14 @@ def gradio_prediction(lat, lon):
             "-",
             "-",
             "-",
-        f"❌ Error: {str(e)}",
-        f"🚨 Alert unavailable: {str(e)}"
-    )
+            f"❌ Error: {str(e)}",
+            f"🚨 Alert unavailable: {str(e)}"
+        )
     # ========================================================
     # 📚 SYSTEM INFORMATION
     # ========================================================
 
     with gr.Row():
-
         with gr.Column(elem_classes="info-panel"):
 
             gr.Markdown("""
@@ -2244,7 +2243,6 @@ setTimeout(
     )
 
     with gr.Row():
-
         with gr.Column(elem_classes="alert-panel"):
 
             alert_status = gr.Textbox(
@@ -2266,7 +2264,6 @@ setTimeout(
 
     with gr.Row():
         enable_alerts_button = gr.Button(
-        
             "🔔 Enable Browser Alerts",
             variant="secondary"
         )
