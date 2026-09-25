@@ -2324,7 +2324,7 @@ if (window.landslideAudioContext) {
     oscillator.start();
 
     oscillator.stop(
-        ctx.currentTime + 5
+        ctx.currentTime + 10
     );
 }
                            new Notification(
