@@ -2266,6 +2266,7 @@ setTimeout(
 
     with gr.Row():
         enable_alerts_button = gr.Button(
+        
             "🔔 Enable Browser Alerts",
             variant="secondary"
         )
