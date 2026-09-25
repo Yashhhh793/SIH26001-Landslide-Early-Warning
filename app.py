@@ -2298,8 +2298,36 @@ setTimeout(
                             window.landslideAudioContext =
                                 audioContext;
                         }
+                        // 🔊 TEST ALERT SOUND
+if (window.landslideAudioContext) {
 
-                        new Notification(
+    const ctx =
+        window.landslideAudioContext;
+
+    const oscillator =
+        ctx.createOscillator();
+
+    const gain =
+        ctx.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = 880;
+
+    gain.gain.setValueAtTime(
+        0.15,
+        ctx.currentTime
+    );
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + 0.5
+    );
+}
+                           new Notification(
                             "🚨 Landslide Alert System",
                             {
                                 body:
